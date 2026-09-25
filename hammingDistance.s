@@ -46,9 +46,9 @@ checkHam:
     mov %rax, len2(%rip)        # store second string length in len2
 
 
-    mov len1(%rip), %rax
-    cmp len2(%rip), %rax
-    jbe len1_is_shorter
+    mov len1(%rip), %rax        # move first string into rax
+    cmp len2(%rip), %rax        # compare first string to second string in length
+    jbe len1_is_shorter         # jump if len1 is shorter than len2 
 
     # if len2 is shorter
     mov len2(%rip), %rdx
@@ -61,35 +61,35 @@ checkHam:
         dec %rdx
 
         
-    length_compare:
-        xor %rcx, %rcx
+    length_compare:            
+        xor %rcx, %rcx                # set hamming distance count to 0
         
-        lea ram(%rip), %rsi
-        lea ram+256(%rip), %rdi
+        lea ram(%rip), %rsi           # first string address
+        lea ram+256(%rip), %rdi       # second string address
     
-    character_loop:
-        movb (%rsi), %al
-        movb (%rdi), %bl
+    character_loop:        
+        movb (%rsi), %al                # get current character from 1st string
+        movb (%rdi), %bl                # get current character from 2nd string
         
-        xorb %bl, %al
-        mov $8, %r8
+        xorb %bl, %al                # find different bits
+        mov $8, %r8                # 8 bits to check for each character
 
     bit_loop:        
-        testb $1, %al
-        jz bit_is_zero
+        testb $1, %al            #check if current bit is a 1
+        jz bit_is_zero            #if bit is 0 skip adding to hamming
         inc %rcx
 
-    bit_is_zero:
-        shrb $1, %al
+    bit_is_zero:                #shift to check next bit
+        shrb $1, %al            
         dec %r8
-        jnz bit_loop
+        jnz bit_loop            #keep checking until all 8 bits have been checked
     
-        inc %rsi
-        inc %rdi
-        dec %rdx
-        jnz character_loop
+        inc %rsi                # move to next character in first string
+        inc %rdi                # move to next character in second string
+        dec %rdx                # subtract 1 from characters left to compare
+        jnz character_loop      # loop until all characters are checked
 
-    mov %rcx, hamResult(%rip)
+    mov %rcx, hamResult(%rip)    #store final hamming distance in hamResult
     ret
 
 .section .note.GNU-stack,"",@progbits
