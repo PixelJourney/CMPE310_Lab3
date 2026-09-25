@@ -19,7 +19,7 @@ prompt2:
 checkHam:
 
     mov $20, %rdx               # number of bytes to print
-    mov $1, %rax                #write
+    mov $1, %rax                # write
     mov $1, %rdi                #out to terminal
     lea prompt1(%rip), %rsi     #address of prompt1
     syscall
@@ -33,7 +33,7 @@ checkHam:
 
 
     mov $21, %rdx               # number of bytes to print
-    mov $1, %rax                #write
+    mov $1, %rax                # write
     mov $1, %rdi                #out to terminal
     lea prompt2(%rip), %rsi     #address of prompt2
     syscall
